@@ -1,7 +1,7 @@
 ---
 title: "Take Home Exam #1"
-author: "Adam J Sullivan"
-date: "February 24, 2024"
+author: "Moriah Ruggerio"
+date: "February 24, 2025"
 output: html_document
 ---
 
@@ -84,6 +84,12 @@ Don't forget that you will need to configure your user name and email for Git to
 In addition to `tidyverse`, you will need the `nycflights13` package for the data.
 You will first need to install these packages and then load them.
 
+```{r packages_setup}
+library(tidyverse)              #loads required packages
+library(nycflights13)
+```
+
+
 ## The data
 
 The `nycflights13` package contains information about all flights that departed from NYC (e.g. EWR, JFK and LGA) in 2013.
@@ -98,6 +104,18 @@ The main data is in the `flights` data frame, but there are additional data sets
 
 1.  **Question 1 (10 points)** - What are the ten most common destinations for flights from NYC airports in 2013?
     Make a table that lists these in descending order of frequency and shows the number of fligts heading to each airport.
+
+``` {r NYC_destinations_chart}
+
+flights %>%
+  count(dest) %>%                 #creates frequency table for destinations
+  arrange(desc(n)) %>%            #arranges from greatest to
+  filter(n > 9700)                #shows only the top 10 least
+```
+
+***I created a frequency table of the destinations of NYC flights in 2013 by using the `count()` function on the variable `dest` (destination). I then arranged the display from greatest to least using `arrange(desc(n))` where `n` is equal to the number of flights to a destination and filtered the data to only include values over `9700` (just under the 10th most frequent destination). (Since only the year 2013 is included in the dataset, year did not need to be separately filtered.)***
+
+***The 10 most frequent destinations for NYC flights in 2013 in descending order are as follows: ORD (17283), ATL	(17215), LAX	(16174), BOS (15508), MCO	(14082), CLT (14064), SFO	(13331), FLL (12055), MIA (11728), and DCA (9705).***
 
 2.  **Question 2 (10 points)** - Which airlines have the most flights departing from NYC airports in 2013?
     Make a table that lists these in descending order of frequency and shows the number of flights for each airline.
