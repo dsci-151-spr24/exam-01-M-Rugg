@@ -583,7 +583,48 @@ that have non-missing arrival delay information. Your answer should
 include the name of the carrier in addition to the carrier code and the
 values asked.</p>
 <p>a. Which carrier had the highest mean arrival delay?</p>
-<p>b. Which carrier had the lowest mean arrival delay?</p></li>
+<p><strong><em>Frontier Airlines Inc. (carrier: F9) had the highest mean
+arrival delay of 21.92 min. (See narrative and table
+below)</em></strong></p>
+<p>b. Which carrier had the lowest mean arrival delay?</p>
+<p><strong><em>Alaska Airlines Inc. (carrier: AS) had the lowest mean
+arrival delay of -9.93 min (aka. early by a mean of 9.93 min). (See
+narrative and table below.</em></strong></p></li>
+</ol>
+<pre class="r"><code>flights %&gt;%
+  filter(!is.na(arr_delay)) %&gt;%       #only includes data with non-missing arrival delay information
+  group_by(name, carrier) %&gt;%         #groups by airline name and includes the carrier code      
+  summarise(mean_arr_delay = mean(arr_delay)) %&gt;% #takes the mean of arr_delay
+  arrange(desc(mean_arr_delay))%&gt;%       #arranges from greatest to least
+  filter(mean_arr_delay &gt; 21 | mean_arr_delay &lt; -9)         #only displays the highest and least mean arrival delay           </code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;name&#39;. You can override using the
+## `.groups` argument.</code></pre>
+<pre><code>## # A tibble: 2 × 3
+## # Groups:   name [2]
+##   name                   carrier mean_arr_delay
+##   &lt;chr&gt;                  &lt;chr&gt;            &lt;dbl&gt;
+## 1 Frontier Airlines Inc. F9               21.9 
+## 2 Alaska Airlines Inc.   AS               -9.93</code></pre>
+<p><strong><em>First, I filtered out any rows from <code>flights</code>
+that were missing arrival delay information using
+<code>filter(!is.na(arr_delay))</code>. I then grouped the data
+(<code>group_by()</code>) by <code>name</code> and <code>carrier</code>.
+This was done to ensure that both were included in the output. Since
+there are not any instances with the same value for <code>carrier</code>
+and a different one <code>name</code> or vice versa, the data could be
+grouped by either (or in this case both) variables with no difference in
+means. Using this grouped data, I calculated the mean of
+<code>arr_delay</code> through the <code>summarise(mean())</code>
+functions and assigned the mean to the variable
+<code>mean_arr_delay</code>. To make the display table easier to
+understand, I organized the means from greatest to least with
+<code>arrange(desc(mean_arr_delay))</code>. I then observed the largest
+and smallest means (first and last rows). Finally, to clean up the
+output table, I filtered the data to only show the these two points by
+only including <code>mean_arr_delay</code> values over 21 (just below
+the largest mean) or under -9 (just above the smallest
+mean).</em></strong></p>
+<ol start="4" style="list-style-type: decimal">
 <li><p><strong>Question 4 (10 points)</strong> - What was the mean
 temperature at the origin airport on the day with the highest departure
 delay? Your answer should include the name of origin airport, the date
