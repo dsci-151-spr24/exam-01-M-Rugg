@@ -517,13 +517,67 @@ in descending order are as follows: ORD (17283), ATL (17215), LAX
 (16174), BOS (15508), MCO (14082), CLT (14064), SFO (13331), FLL
 (12055), MIA (11728), and DCA (9705).</em></strong></p>
 <ol start="2" style="list-style-type: decimal">
-<li><p><strong>Question 2 (10 points)</strong> - Which airlines have the
+<li><strong>Question 2 (10 points)</strong> - Which airlines have the
 most flights departing from NYC airports in 2013? Make a table that
 lists these in descending order of frequency and shows the number of
 flights for each airline. In your narrative mention the names of the
 airlines as well. <em>Hint:</em> You can use the <code>airlines</code>
 dataset to look up the airline name based on <code>carrier</code>
-code.</p></li>
+code.</li>
+</ol>
+<p>I want to create another column in the dataset (mutate()). Using the
+carier code data from airlines Or…what if I mutated airlines instead?
+but it would be much cleaner if updated flights instead.</p>
+<p>Frequency table arrange(desc(…))</p>
+<pre class="r"><code>#############################################
+# Code Inspiration
+#
+# Title: R for Data Science: 19.3 Basic Joins
+# Authors: Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund
+# Version: 2.0
+# Availibility: https://r4ds.hadley.nz/
+#############################################
+
+flights &lt;- flights %&gt;%
+  left_join(airlines)           #adds airlines to the dataset</code></pre>
+<pre><code>## Joining with `by = join_by(carrier)`</code></pre>
+<pre class="r"><code>  #filter(is.na(name))              #checks that all carriers have a corresponding name</code></pre>
+<pre class="r"><code>flights %&gt;%
+  count(name) %&gt;%                     #creates frequency table
+  arrange(desc(n))</code></pre>
+<pre><code>## # A tibble: 16 × 2
+##    name                            n
+##    &lt;chr&gt;                       &lt;int&gt;
+##  1 United Air Lines Inc.       58665
+##  2 JetBlue Airways             54635
+##  3 ExpressJet Airlines Inc.    54173
+##  4 Delta Air Lines Inc.        48110
+##  5 American Airlines Inc.      32729
+##  6 Envoy Air                   26397
+##  7 US Airways Inc.             20536
+##  8 Endeavor Air Inc.           18460
+##  9 Southwest Airlines Co.      12275
+## 10 Virgin America               5162
+## 11 AirTran Airways Corporation  3260
+## 12 Alaska Airlines Inc.          714
+## 13 Frontier Airlines Inc.        685
+## 14 Mesa Airlines Inc.            601
+## 15 Hawaiian Airlines Inc.        342
+## 16 SkyWest Airlines Inc.          32</code></pre>
+<p><strong><em>I first added the airline names to the
+<code>flights</code> dataset. To do this I used a
+<code>left.join()</code> to take the <code>name</code> column from
+<code>airlines</code> and add it to <code>flights</code>. This matched
+the <code>carrier</code> in <code>flights</code> to it in
+<code>airlines</code>. I then saved these changes to
+<code>flights</code> to make it accessible for later. In a separate
+chunk, I created a frequency table using the <code>count()</code>
+function. I then arranged it from greatest to least with
+<code>arrange(desc(n))</code>.</em></strong></p>
+<p><strong><em>The airlines with the most flights out of NYC in 2013 are
+United Airlines Inc. (58,665), Jet Blue Airways (54,635), and ExpressJet
+Airlines Inc. (54,173).</em></strong></p>
+<ol start="3" style="list-style-type: decimal">
 <li><p><strong>Question 3 (10 points)</strong> - Consider only flights
 that have non-missing arrival delay information. Your answer should
 include the name of the carrier in addition to the carrier code and the

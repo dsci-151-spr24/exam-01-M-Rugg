@@ -121,6 +121,42 @@ flights %>%
     Make a table that lists these in descending order of frequency and shows the number of flights for each airline.
     In your narrative mention the names of the airlines as well.
     *Hint:* You can use the `airlines` dataset to look up the airline name based on `carrier` code.
+    
+I want to create another column in the dataset (mutate()).
+     Using the carier code data from airlines
+     Or...what if I mutated airlines instead?
+     but it would be much cleaner if updated flights instead.
+     
+Frequency table
+arrange(desc(...))
+
+```{r  flights_airline_join}
+
+#############################################
+# Code Inspiration
+#
+# Title: R for Data Science: 19.3 Basic Joins
+# Authors: Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund
+# Version: 2.0
+# Availibility: https://r4ds.hadley.nz/
+#############################################
+
+flights <- flights %>%
+  left_join(airlines)           #adds airlines to the dataset
+  #filter(is.na(name))              #checks that all carriers have a corresponding name
+
+```
+```{r flights_airline_frequency}
+
+flights %>%
+  count(name) %>%                     #creates frequency table
+  arrange(desc(n))
+
+```
+
+***I first added the airline names to the `flights` dataset. To do this I used a `left.join()` to take the `name` column from `airlines` and add it to `flights`. This matched the `carrier` in `flights` to it in `airlines`. I then saved these changes to `flights` to make it accessible for later. In a separate chunk, I created a frequency table using the `count()` function. I then arranged it from greatest to least with `arrange(desc(n))`.***
+
+***The airlines with the most flights out of NYC in 2013 are United Airlines Inc. (58,665), Jet Blue Airways (54,635), and ExpressJet Airlines Inc. (54,173).***
 
 3.  **Question 3 (10 points)** - Consider only flights that have non-missing arrival delay information.
     Your answer should include the name of the carrier in addition to the carrier code and the values asked.
