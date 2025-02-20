@@ -186,6 +186,44 @@ flights %>%
 4.  **Question 4 (10 points)** - What was the mean temperature at the origin airport on the day with the highest departure delay?
     Your answer should include the name of origin airport, the date with the highest departure delay, and the mean temperature on that day.
 
+
+```{r combine_flights_weather}
+#############################################
+# Code Inspiration
+#
+# Title: R for Data Science: 17.2.3 From individual components & 19.3.1 Mutating joins
+# Authors: Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund
+# Version: 2.0
+# Availibility: https://r4ds.hadley.nz/datetimes.html & https://r4ds.hadley.nz/joins.html
+#############################################
+
+flights <- flights %>%
+  mutate(date = make_date(year, month, day)) %>% #adds the date
+  left_join(weather)                 #joins the two datasets keeping all instances of flights and adding the instances in weather that align with flights
+```
+
+```{r airport_max-delay_temps}
+
+flights %>%
+  select(origin, dep_delay, date) %>% #limits output to origin, departure delay time, and the date
+  arrange(desc(dep_delay)) %>%              #organizes from longest to shortest delays
+#JFK on 2013-01-09 had the longest departure delay of 1301 min.
+  filter(dep_delay == 1301)                 #shows only the longest departure delay
+
+```
+``` {r average_temp}
+flights %>%
+  group_by(origin, date) %>%         #groups by origin airport and then date
+  summarise(mean_daily_temp = mean(temp)) %>% #calculates the mean daily temp for the specific airport on that day
+  filter(origin == "JFK", date == "2013-01-09") #shows only the day and airport that had the longest departure delay
+```
+
+***To make accessing and grouping by days easier later on, I first added a new variable called `date` by combining `year`, `month`, and `day` into a date-class variable. I then added the `weather` dataset to the `flights` using a left join to keep only the weather data that had flight data that corresponded to it and saved my changes to the `flights` dataset.*** 
+
+***In the next chunk I found the origin and date of the flight with the longest departure time. To do this, I first limited my output to `origin`, `dep_delay`, and `date`. Next, I organized `flights` from longest to shortest departure delay by using `arrange(desc(dep_delay))` and recorded the largest `dep_delay` value (1301). Finally, to clean up the output I filtered the data to only include the longest departure delay by using `filter(dep_delay == 1301)`. On 2013-01-09, JFK had the longest departure delay of 1301 min.***
+
+***In my last chunk I found the average temp for the airport with the longest departure delay on that day. To do this, I grouped `flights` by `origin` and then `date` to divide the data by days and departing airport. I then calculated the mean of `temp` using the `summarise(mean())` functions. Finally, I cleaned up the table output to only show the row with the highest departure delay by filtering for `origin == "JFK"` and `date == 2013-01-09`. On 2013-01-09, JFK had the longest departure delay of 1301 min and an average temperature of 44.56 F.***
+
 5.  **Question 5 (15 points)** - Consider breaking the day into four time intervals: 12:01am-6am, 6:01am-12pm, 12:01pm-6pm, 6:01pm-12am.
 
     a\.
