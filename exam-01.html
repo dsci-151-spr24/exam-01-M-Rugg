@@ -737,6 +737,35 @@ prop.table(delays_table, 1)           #creates a frequency table of delayed flig
   #filter(!is.na(dep_delay_or_not)) %&gt;%
   #group_by(time_interval) %&gt;%
   #count(dep_delay_or_not)</code></pre>
+<p><strong><em>In my first chunk, I set up the time intervals
+(12:01am-6am, 6:01am-12pm, 12:01pm-6pm, 6:01pm-12am) as a variable,
+<code>time interval</code>. I first checked that <code>flights</code>
+had a scheduled departure time for each row by filtering all
+<code>N/A</code> values for <code>sched_dep_time</code>. There were no
+rows missing data for this variable. In a new section of code, I created
+a new variable <code>time_interval</code> using mutate and a series of
+nestled if-then statements (<code>if_else()</code>) where if
+<code>sched_dep_time</code> was greater than the specified time (600,
+1200 and 1800 respectively) it would proceed on to the next statement.
+If the the time was less than or greater, however, it would assign
+<code>time_interval</code> to the appropriate bracket: 12:01am-6am,
+6:01am-12pm, and 12:01pm-6pm respectively. Finally, if the the time was
+larger than all the times, it would assign it to the 6:01pm-12am
+interval. After the <code>time_interval</code> variable was created, I
+added another variable <code>dep_delay_or_not</code>, using mutate and
+an <code>if_else()</code> statement. If <code>dep_delay</code> was
+greater than 0, then <code>dep_delay_or_not</code> = “delayed”. When
+<code>dep_delay</code> was less than or equal to 0, however,
+<code>dep_delay_or_not</code> = “on time”. I then saved these variable
+sections of the code to <code>flights</code> to make them accesssible in
+future chunks.</em></strong></p>
+<p><strong><em>In my last chunk, I created a frequency table using
+proportions. I first created a table (<code>delays_table</code>) to
+store the counts of whether the flight was delayed or not by time
+interval (<code>time_interval</code> for rows and
+<code>dep_delay_or_not</code> for columns). I then converted this table
+of counts into proportions where each row added up to 1 by using
+<code>prop.table(delays_table, 1)</code>.</em></strong></p>
 <pre><code>b\.
 Comment on how the likelihood of being delayed change throughout the day?</code></pre>
 <p><strong><em>The later the flight is, the higher the likelihood of it

@@ -260,6 +260,10 @@ prop.table(delays_table, 1)           #creates a frequency table of delayed flig
   #group_by(time_interval) %>%
   #count(dep_delay_or_not)
 ```
+***In my first chunk, I set up the time intervals (12:01am-6am, 6:01am-12pm, 12:01pm-6pm, 6:01pm-12am) as a variable, `time interval`. I first checked that `flights` had a scheduled departure time for each row by filtering all `N/A` values for `sched_dep_time`. There were no rows missing data for this variable. In a new section of code, I created a new variable `time_interval` using mutate and a series of nestled if-then statements (`if_else()`) where if `sched_dep_time` was greater than the specified time (600, 1200 and 1800 respectively) it would proceed on to the next statement. If the the time was less than or greater, however, it would assign `time_interval` to the appropriate bracket: 12:01am-6am, 6:01am-12pm, and  12:01pm-6pm respectively. Finally, if the the time was larger than all the times, it would assign it to the 6:01pm-12am interval. After the `time_interval` variable was created, I added another variable `dep_delay_or_not`, using mutate and an `if_else()` statement. If `dep_delay` was greater than 0, then `dep_delay_or_not` =  "delayed". When `dep_delay` was less than or equal to 0, however, `dep_delay_or_not` = "on time". I then saved these variable sections of the code to `flights` to make them accesssible in future chunks.***
+
+***In my last chunk, I created a frequency table using proportions. I first created a table (`delays_table`) to store the counts of whether the flight was delayed or not by time interval (`time_interval` for rows and `dep_delay_or_not` for columns). I then converted this table of counts into proportions where each row added up to 1 by using `prop.table(delays_table, 1)`.***
+
     b\.
     Comment on how the likelihood of being delayed change throughout the day?
 
