@@ -121,14 +121,6 @@ flights %>%
     Make a table that lists these in descending order of frequency and shows the number of flights for each airline.
     In your narrative mention the names of the airlines as well.
     *Hint:* You can use the `airlines` dataset to look up the airline name based on `carrier` code.
-    
-I want to create another column in the dataset (mutate()).
-     Using the carier code data from airlines
-     Or...what if I mutated airlines instead?
-     but it would be much cleaner if updated flights instead.
-     
-Frequency table
-arrange(desc(...))
 
 ```{r  flights_airline_join}
 
@@ -146,6 +138,7 @@ flights <- flights %>%
   #filter(is.na(name))              #checks that all carriers have a corresponding name
 
 ```
+
 ```{r flights_airline_frequency}
 
 flights %>%
@@ -269,21 +262,46 @@ prop.table(delays_table, 1)           #creates a frequency table of delayed flig
 
 ***The later the flight is, the higher the likelihood of it being delayed. The earliest flights (12:01am-6am) had the least likelihood of being delayed (proportion of 0.21 delayed flights), followed by the 6:01am-12pm interval with a delayed flight proportion of 0.26. The latest two time intervals, 12:01pm-6pm and 6:01pm-12am, had a proportion of 0.46 and 0.52 delayed flights respectively. The likelihood of being delayed (proportion of delayed flights) follows the time of day with later times having more delayed flights than earlier.***
     
-call the dataset
-mutate to create a time interval variable
-  use if then statements to determine which braket the flight belongs in
-create a new variable? (not saved just for math output)
-
 6.  **Question 6 (15 points)** - Find the flight with the longest air time.
 
     a\.
     How long is this flight?
+    
+    ***This flight was 695 min or 11 hrs and 35 min. (See narrative and table below.)***
 
     b\.
     What city did it fly to?
+    
+    ***It flew to Honolulu, Hawaii. (See narrative and table below.)***
 
     c\.
     How many seats does the plane that flew this flight have?
+    
+    ***The plane that flew this flight has 292 seats. (See narrative and table below.)***
+
+``` {r flight_longest_setup}
+#############################################
+# Title: R for Data Science: 19.3.2 Specifying Join Keys
+# Authors: Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund
+# Version: 2.0
+# Availibility: https://r4ds.hadley.nz/joins.html
+#############################################
+
+flights <- 
+  flights %>%
+  left_join(airports, join_by(dest == faa)) %>% #attaches airports to flights, destination (in flights) is matched to the faa code
+  left_join(planes, join_by(tailnum)) #%>%                  #attaches planes to flights where only planes with flight data in flights is kept
+  #select(date, origin, dest, name.y, tailnum, seats)    #reduces columns to easily check that the dataset correctly attached
+```
+
+``` {r flight_longest_airtime}
+
+flights %>%
+  select(date, air_time, dest, name.y, seats) %>% #only shows relevant variables
+  arrange(desc(air_time)) %>%     #orders output from greatest to least air time
+  # The flight to Honolulu on 2013-03-17 had the longest airtime of 695.
+  filter(air_time == 695)         #only show the flight with the longest air time.
+```
 
 7.  **Question 7 (15 pts)** - The `airports` data frame contains information on a large number of primarily American airports.
     These data include location information for these airports in the form of latitude and longitude coordinates.

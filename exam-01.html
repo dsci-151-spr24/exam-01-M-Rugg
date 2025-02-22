@@ -525,10 +525,6 @@ airlines as well. <em>Hint:</em> You can use the <code>airlines</code>
 dataset to look up the airline name based on <code>carrier</code>
 code.</li>
 </ol>
-<p>I want to create another column in the dataset (mutate()). Using the
-carier code data from airlines Or…what if I mutated airlines instead?
-but it would be much cleaner if updated flights instead.</p>
-<p>Frequency table arrange(desc(…))</p>
 <pre class="r"><code>#############################################
 # Code Inspiration
 #
@@ -777,15 +773,40 @@ proportion of 0.46 and 0.52 delayed flights respectively. The likelihood
 of being delayed (proportion of delayed flights) follows the time of day
 with later times having more delayed flights than
 earlier.</em></strong></p>
-<p>call the dataset mutate to create a time interval variable use if
-then statements to determine which braket the flight belongs in create a
-new variable? (not saved just for math output)</p>
 <ol start="6" style="list-style-type: decimal">
 <li><p><strong>Question 6 (15 points)</strong> - Find the flight with
 the longest air time.</p>
 <p>a. How long is this flight?</p>
+<p>This flight was 695 min or 11 hrs and 35 min. (See narrative and
+table below.)</p>
 <p>b. What city did it fly to?</p>
-<p>c. How many seats does the plane that flew this flight have?</p></li>
+<p>It flew to Honolulu, Hawaii. (See narrative and table below.)</p>
+<p>c. How many seats does the plane that flew this flight have?</p>
+<p>The plane that flew this flight has 292 seats. (See narrative and
+table below.)</p></li>
+</ol>
+<pre class="r"><code>#############################################
+# Title: R for Data Science: 19.3.2 Specifying Join Keys
+# Authors: Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund
+# Version: 2.0
+# Availibility: https://r4ds.hadley.nz/joins.html
+#############################################
+
+flights &lt;- 
+  flights %&gt;%
+  left_join(airports, join_by(dest == faa)) %&gt;% #attaches airports to flights, destination (in flights) is matched to the faa code
+  left_join(planes, join_by(tailnum)) #%&gt;%                  #attaches planes to flights where only planes with flight data in flights is kept
+  #select(date, origin, dest, name.y, tailnum, seats)    #reduces columns to easily check that the dataset correctly attached</code></pre>
+<pre class="r"><code>flights %&gt;%
+  select(date, air_time, dest, name.y, seats) %&gt;% #only shows relevant variables
+  arrange(desc(air_time)) %&gt;%     #orders output from greatest to least air time
+  # The flight to Honolulu on 2013-03-17 had the longest airtime of 695.
+  filter(air_time == 695)         #only show the flight with the longest air time.</code></pre>
+<pre><code>## # A tibble: 1 × 5
+##   date       air_time dest  name.y        seats
+##   &lt;date&gt;        &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;         &lt;int&gt;
+## 1 2013-03-17      695 HNL   Honolulu Intl   292</code></pre>
+<ol start="7" style="list-style-type: decimal">
 <li><p><strong>Question 7 (15 pts)</strong> - The <code>airports</code>
 data frame contains information on a large number of primarily American
 airports. These data include location information for these airports in
