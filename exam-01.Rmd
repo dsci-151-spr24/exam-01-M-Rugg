@@ -229,8 +229,46 @@ flights %>%
     a\.
     Calculate the proportion of flights that are delayed at departure at each of these time intervals.
 
+``` {r time_interval_setup}
+flights %>%
+  filter(is.na(sched_dep_time))        #checks there are no flights missing a scheduled departure time
+
+flights <- 
+  flights %>%
+  mutate(time_interval =               #creates a new variable for the time intervals using a series of nestled if then statements
+           if_else(sched_dep_time <= 600, "12:01am-6am",
+                   if_else(sched_dep_time <= 1200, "6:01am-12pm",
+                           if_else(sched_dep_time <= 1800, "12:01pm-6pm", "6:01pm-12am")))) %>%
+  mutate(dep_delay_or_not = if_else(dep_delay > 0, "delayed", "on time")) #%>%    # creates a variable to store whether the flight has been delayed or not
+  #filter(is.na(dep_delay_or_not))     #checks why there are N/A values in dep_delay_or_not
+```
+``` {r time_interval_frequency}
+#############################################
+# Title: R Tutorial: Counts vs. proportions
+# Authors: DataCamp
+#
+# Availibility: https://www.youtube.com/watch?v=UCdh1sh1kos&t=121s
+#############################################
+
+delays_table <- 
+  table(flights$time_interval, flights$dep_delay_or_not)  #creates a table of counts to store the data
+
+prop.table(delays_table, 1)           #creates a frequency table of delayed flights where the rows add up to 1
+
+#flights %>%                              #checks that NA values are not sneaking in to the proportion table
+  #filter(!is.na(dep_delay_or_not)) %>%
+  #group_by(time_interval) %>%
+  #count(dep_delay_or_not)
+```
     b\.
     Comment on how the likelihood of being delayed change throughout the day?
+
+***The later the flight is, the higher the likelihood of it being delayed. The earliest flights (12:01am-6am) had the least likelihood of being delayed (proportion of 0.21 delayed flights), followed by the 6:01am-12pm interval with a delayed flight proportion of 0.26. The latest two time intervals, 12:01pm-6pm and 6:01pm-12am, had a proportion of 0.46 and 0.52 delayed flights respectively. The likelihood of being delayed (proportion of delayed flights) follows the time of day with later times having more delayed flights than earlier.***
+    
+call the dataset
+mutate to create a time interval variable
+  use if then statements to determine which braket the flight belongs in
+create a new variable? (not saved just for math output)
 
 6.  **Question 6 (15 points)** - Find the flight with the longest air time.
 

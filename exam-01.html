@@ -696,9 +696,62 @@ average temperature of 44.56 F.</em></strong></p>
 day into four time intervals: 12:01am-6am, 6:01am-12pm, 12:01pm-6pm,
 6:01pm-12am.</p>
 <p>a. Calculate the proportion of flights that are delayed at departure
-at each of these time intervals.</p>
-<p>b. Comment on how the likelihood of being delayed change throughout
-the day?</p></li>
+at each of these time intervals.</p></li>
+</ol>
+<pre class="r"><code>flights %&gt;%
+  filter(is.na(sched_dep_time))        #checks there are no flights missing a scheduled departure time</code></pre>
+<pre><code>## # A tibble: 0 × 30
+## # ℹ 30 variables: year &lt;int&gt;, month &lt;int&gt;, day &lt;int&gt;, dep_time &lt;int&gt;,
+## #   sched_dep_time &lt;int&gt;, dep_delay &lt;dbl&gt;, arr_time &lt;int&gt;,
+## #   sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+## #   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;, name &lt;chr&gt;, date &lt;date&gt;,
+## #   temp &lt;dbl&gt;, dewp &lt;dbl&gt;, humid &lt;dbl&gt;, wind_dir &lt;dbl&gt;, wind_speed &lt;dbl&gt;,
+## #   wind_gust &lt;dbl&gt;, precip &lt;dbl&gt;, pressure &lt;dbl&gt;, visib &lt;dbl&gt;</code></pre>
+<pre class="r"><code>flights &lt;- 
+  flights %&gt;%
+  mutate(time_interval =               #creates a new variable for the time intervals using a series of nestled if then statements
+           if_else(sched_dep_time &lt;= 600, &quot;12:01am-6am&quot;,
+                   if_else(sched_dep_time &lt;= 1200, &quot;6:01am-12pm&quot;,
+                           if_else(sched_dep_time &lt;= 1800, &quot;12:01pm-6pm&quot;, &quot;6:01pm-12am&quot;)))) %&gt;%
+  mutate(dep_delay_or_not = if_else(dep_delay &gt; 0, &quot;delayed&quot;, &quot;on time&quot;)) #%&gt;%    # creates a variable to store whether the flight has been delayed or not
+  #filter(is.na(dep_delay_or_not))     #checks why there are N/A values in dep_delay_or_not</code></pre>
+<pre class="r"><code>#############################################
+# Title: R Tutorial: Counts vs. proportions
+# Authors: DataCamp
+#
+# Availibility: https://www.youtube.com/watch?v=UCdh1sh1kos&amp;t=121s
+#############################################
+
+delays_table &lt;- 
+  table(flights$time_interval, flights$dep_delay_or_not)  #creates a table of counts to store the data
+
+prop.table(delays_table, 1)           #creates a frequency table of delayed flights where the rows add up to 1</code></pre>
+<pre><code>##              
+##                 delayed   on time
+##   12:01am-6am 0.2067985 0.7932015
+##   12:01pm-6pm 0.4625371 0.5374629
+##   6:01am-12pm 0.2603967 0.7396033
+##   6:01pm-12am 0.5195510 0.4804490</code></pre>
+<pre class="r"><code>#flights %&gt;%                              #checks that NA values are not sneaking in to the proportion table
+  #filter(!is.na(dep_delay_or_not)) %&gt;%
+  #group_by(time_interval) %&gt;%
+  #count(dep_delay_or_not)</code></pre>
+<pre><code>b\.
+Comment on how the likelihood of being delayed change throughout the day?</code></pre>
+<p><strong><em>The later the flight is, the higher the likelihood of it
+being delayed. The earliest flights (12:01am-6am) had the least
+likelihood of being delayed (proportion of 0.21 delayed flights),
+followed by the 6:01am-12pm interval with a delayed flight proportion of
+0.26. The latest two time intervals, 12:01pm-6pm and 6:01pm-12am, had a
+proportion of 0.46 and 0.52 delayed flights respectively. The likelihood
+of being delayed (proportion of delayed flights) follows the time of day
+with later times having more delayed flights than
+earlier.</em></strong></p>
+<p>call the dataset mutate to create a time interval variable use if
+then statements to determine which braket the flight belongs in create a
+new variable? (not saved just for math output)</p>
+<ol start="6" style="list-style-type: decimal">
 <li><p><strong>Question 6 (15 points)</strong> - Find the flight with
 the longest air time.</p>
 <p>a. How long is this flight?</p>
