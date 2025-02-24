@@ -303,6 +303,10 @@ flights %>%
   filter(air_time == 695)         #only show the flight with the longest air time.
 ```
 
+***In my first chunk I attached both of the necessary datasets, `airports` and `planes`, to the the main dataset, `flights`. I used a `left_join` for each to make sure to only keep `airport` and `plane` data for rows that we had flight data on. However, for both datasets I had to manually set the join key using `join_by()`. For `airports` I specified that `dest == faa`. This matched `faa` (the airport code) to the destination airport code in `flights`. For planes, I set the key to `tailnum` since it was automatically using `year` which means 2 different things in the datasets. In `flights` it is the year of the flight, but in `planes` it is the year the plane was made. `Tailnum`, however, is in both datasets and references the same thing.***
+
+***In my next chunk, I determined the flight with the longest airtime, found the destination, and determined the number of seats on the flight. I first selected only `date`, `air_time`, `dest`, `name.y` (name of the airport), and `seats` from `flights` to keep my output clean. I then arranged the data from greatest to least by air_time to determine the flight with the longest air_time. The flight to Honolulu on 2013-03-17 had the longest airtime of 695 min (or 11 hr 35 min). Finally, I limited my table output to only show this flight by filtering for data with an `air_time` of 695.***
+
 7.  **Question 7 (15 pts)** - The `airports` data frame contains information on a large number of primarily American airports.
     These data include location information for these airports in the form of latitude and longitude coordinates.
     In this question we limit our focus to the [Contiguous United States](https://en.wikipedia.org/wiki/Contiguous_United_States).

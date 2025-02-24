@@ -777,13 +777,14 @@ earlier.</em></strong></p>
 <li><p><strong>Question 6 (15 points)</strong> - Find the flight with
 the longest air time.</p>
 <p>a. How long is this flight?</p>
-<p>This flight was 695 min or 11 hrs and 35 min. (See narrative and
-table below.)</p>
+<p><strong><em>This flight was 695 min or 11 hrs and 35 min. (See
+narrative and table below.)</em></strong></p>
 <p>b. What city did it fly to?</p>
-<p>It flew to Honolulu, Hawaii. (See narrative and table below.)</p>
+<p><strong><em>It flew to Honolulu, Hawaii. (See narrative and table
+below.)</em></strong></p>
 <p>c. How many seats does the plane that flew this flight have?</p>
-<p>The plane that flew this flight has 292 seats. (See narrative and
-table below.)</p></li>
+<p><strong><em>The plane that flew this flight has 292 seats. (See
+narrative and table below.)</em></strong></p></li>
 </ol>
 <pre class="r"><code>#############################################
 # Title: R for Data Science: 19.3.2 Specifying Join Keys
@@ -806,6 +807,31 @@ flights &lt;-
 ##   date       air_time dest  name.y        seats
 ##   &lt;date&gt;        &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;         &lt;int&gt;
 ## 1 2013-03-17      695 HNL   Honolulu Intl   292</code></pre>
+<p><strong><em>In my first chunk I attached both of the necessary
+datasets, <code>airports</code> and <code>planes</code>, to the the main
+dataset, <code>flights</code>. I used a <code>left_join</code> for each
+to make sure to only keep <code>airport</code> and <code>plane</code>
+data for rows that we had flight data on. However, for both datasets I
+had to manually set the join key using <code>join_by()</code>. For
+<code>airports</code> I specified that <code>dest == faa</code>. This
+matched <code>faa</code> (the airport code) to the destination airport
+code in <code>flights</code>. For planes, I set the key to
+<code>tailnum</code> since it was automatically using <code>year</code>
+which means 2 different things in the datasets. In <code>flights</code>
+it is the year of the flight, but in <code>planes</code> it is the year
+the plane was made. <code>Tailnum</code>, however, is in both datasets
+and references the same thing.</em></strong></p>
+<p><strong><em>In my next chunk, I determined the flight with the
+longest airtime, found the destination, and determined the number of
+seats on the flight. I first selected only <code>date</code>,
+<code>air_time</code>, <code>dest</code>, <code>name.y</code> (name of
+the airport), and <code>seats</code> from <code>flights</code> to keep
+my output clean. I then arranged the data from greatest to least by
+air_time to determine the flight with the longest air_time. The flight
+to Honolulu on 2013-03-17 had the longest airtime of 695 min (or 11 hr
+35 min). Finally, I limited my table output to only show this flight by
+filtering for data with an <code>air_time</code> of
+695.</em></strong></p>
 <ol start="7" style="list-style-type: decimal">
 <li><p><strong>Question 7 (15 pts)</strong> - The <code>airports</code>
 data frame contains information on a large number of primarily American
