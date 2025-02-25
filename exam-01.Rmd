@@ -330,8 +330,16 @@ airports %>%
   labs(title = "Airport Locations in the Contiguous United States", y = "latitude", x = "longitude") +
   theme_minimal()
 ```
+
+***Based on the visualization, most airports appear to be spread throughout the eastern half of the United States. However, there enough airports distributed throughout most of the contigous US that one can see the shape of the contiguous US (Maine, Vermont, and New Hampshire however, get lost). There are a few areas with a lot of overlapping airport locations. These appear to be primarily coastal or nearby a waterway. This includes airports in Florida, California, Washington state, Great Lakes region, and the Northern East Coast.***
+
+
 **Longitude and Latitude coordinates for the Contiguous US:**
 Wikipedia contributors. (2025, February 22). List of extreme points of the United States. *Wikipedia, The Free Encyclopedia.* Retrieved February 25, 2025, from https://en.wikipedia.org/w/index.php?title=List_of_extreme_points_of_the_United_States&oldid=1277027586*
+
+***To start, I found the latitude and longitude coordinates of the of the most extreme points in the contiguous United States. Latitude was used for the southern and northernmost points. Longitude was used for the eastern and westernmost points.  Northwest Angle Inlet, MN was the northernmost point with a latitude of 49.2304, and Ballast Key, FL was the southernmost with a latitude of 24.3119 (Wikipedia contributers, 2025). Sail Rock, Lubec, ME was the easternmost point with a longitude of 66.56493, and the Bodelteh Islands, Cape Alava, WA were the westernmost point with a longitude of -124.46181 (Wikipedia contributers, 2025). After finding the points, I filtered the data to only include rows with latitudes that were less than the northernmost point but greater than the southernmost and that had longitudes less than the easternmost point but greater than the westernmost. This created essentially a rectangle of longitude and latitude bounds around the US. Since this rectangle could technically include parts of Canada or Mexico, I checked that all the timezones were US based by creating a frequency table using `count(tzone)`. The timezones were Chicago, Denver, New York, and Phoenix (all of which are part of the contiguous US). I commented the `count()` code out after a sucessfull check to create the visualization.****
+
+***For the visualization, I created a scatterplot of the filtered data. I used `ggplot()` where the asthetics of x and y were mapped to `lon` (longitude) and `lat` (latitude) respectively. I then added `geom_point()` (plots as a scatterplot) and fixed the alpha level to equal 0.20 to allow for overlapping points to be seen. Finally, I added labels (title = "Airport Locations in the Contiguous United States", y = "latitude", x = "longitude") using `labs()` and made the theme minimal (`theme_minimal`).***
 
 8.  **Question 8 (15 pts)** - Recreate the plot included below using the `flights` data.
     Once you have created the visualization, in no more than one paragraph, describe what you think the point of this visualization might be.
