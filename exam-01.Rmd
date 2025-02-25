@@ -316,6 +316,23 @@ flights %>%
     [This Wikipedia article](https://en.wikipedia.org/wiki/List_of_extreme_points_of_the_United_States) can help, but you're welcomed to use other resources as well.
     Make sure to cite whatever resource you use.
 
+``` {r contiguous_US_airports}
+
+airports %>%
+  filter(lat < 49.2304, lat > 24.3119,  # only includes data with latitudes between the northernmost point (Northwest Angle Inlet, MN) and the southernmost point (Ballast Key, FL) in the contiguous US (Wikipedia contributers, 2025)
+          lon < 66.56493, lon > -124.46181) %>% # only includes data with longitudes between the easternmost point (Sail Rock, Lubec, ME) and the westernmost point (Bodelteh Islands,  Cape Alava, WA) in the contiguous US (Wikipedia contributers, 2025)
+  
+  #filter(lat > 49.2304 | lat < 24.3119, 
+          #lon > 66.56493 | lon < -124.46181) %>% #Checks that none of the excluded points are part of the contiguous US
+  #count(tzone)                    #condenses into time/zones to check all are within the contiguous US
+  ggplot(mapping = aes(x = lon, y = lat)) +
+  geom_point(alpha = 0.20) +
+  labs(title = "Airport Locations in the Contiguous United States", y = "latitude", x = "longitude") +
+  theme_minimal()
+```
+**Longitude and Latitude coordinates for the Contiguous US:**
+Wikipedia contributors. (2025, February 22). List of extreme points of the United States. *Wikipedia, The Free Encyclopedia.* Retrieved February 25, 2025, from https://en.wikipedia.org/w/index.php?title=List_of_extreme_points_of_the_United_States&oldid=1277027586*
+
 8.  **Question 8 (15 pts)** - Recreate the plot included below using the `flights` data.
     Once you have created the visualization, in no more than one paragraph, describe what you think the point of this visualization might be.
     *Hint:* The visualization uses the variable `arrival`, which is not included in the `flights` data frame.
