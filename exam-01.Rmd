@@ -204,6 +204,7 @@ flights %>%
   filter(dep_delay == 1301)                 #shows only the longest departure delay
 
 ```
+
 ``` {r average_temp}
 flights %>%
   group_by(origin, date) %>%         #groups by origin airport and then date
@@ -232,7 +233,7 @@ flights <-
            if_else(sched_dep_time <= 600, "12:01am-6am",
                    if_else(sched_dep_time <= 1200, "6:01am-12pm",
                            if_else(sched_dep_time <= 1800, "12:01pm-6pm", "6:01pm-12am")))) %>%
-  mutate(dep_delay_or_not = if_else(dep_delay > 0, "delayed", "on time")) #%>%    # creates a variable to store whether the flight has been delayed or not
+  mutate(arrival = if_else(dep_delay > 0, "delayed", "ontime")) #%>%    # creates a variable to store whether the flight has been delayed or not
   #filter(is.na(dep_delay_or_not))     #checks why there are N/A values in dep_delay_or_not
 ```
 ``` {r time_interval_frequency}
@@ -244,7 +245,7 @@ flights <-
 #############################################
 
 delays_table <- 
-  table(flights$time_interval, flights$dep_delay_or_not)  #creates a table of counts to store the data
+  table(flights$time_interval, flights$arrival)  #creates a table of counts to store the data
 
 prop.table(delays_table, 1)           #creates a frequency table of delayed flights where the rows add up to 1
 
@@ -253,9 +254,9 @@ prop.table(delays_table, 1)           #creates a frequency table of delayed flig
   #group_by(time_interval) %>%
   #count(dep_delay_or_not)
 ```
-***In my first chunk, I set up the time intervals (12:01am-6am, 6:01am-12pm, 12:01pm-6pm, 6:01pm-12am) as a variable, `time interval`. I first checked that `flights` had a scheduled departure time for each row by filtering all `N/A` values for `sched_dep_time`. There were no rows missing data for this variable. In a new section of code, I created a new variable `time_interval` using mutate and a series of nestled if-then statements (`if_else()`) where if `sched_dep_time` was greater than the specified time (600, 1200 and 1800 respectively) it would proceed on to the next statement. If the the time was less than or greater, however, it would assign `time_interval` to the appropriate bracket: 12:01am-6am, 6:01am-12pm, and  12:01pm-6pm respectively. Finally, if the the time was larger than all the times, it would assign it to the 6:01pm-12am interval. After the `time_interval` variable was created, I added another variable `dep_delay_or_not`, using mutate and an `if_else()` statement. If `dep_delay` was greater than 0, then `dep_delay_or_not` =  "delayed". When `dep_delay` was less than or equal to 0, however, `dep_delay_or_not` = "on time". I then saved these variable sections of the code to `flights` to make them accesssible in future chunks.***
+***In my first chunk, I set up the time intervals (12:01am-6am, 6:01am-12pm, 12:01pm-6pm, 6:01pm-12am) as a variable, `time interval`. I first checked that `flights` had a scheduled departure time for each row by filtering all `N/A` values for `sched_dep_time`. There were no rows missing data for this variable. In a new section of code, I created a new variable `time_interval` using mutate and a series of nestled if-then statements (`if_else()`) where if `sched_dep_time` was greater than the specified time (600, 1200 and 1800 respectively) it would proceed on to the next statement. If the the time was less than or greater, however, it would assign `time_interval` to the appropriate bracket: 12:01am-6am, 6:01am-12pm, and  12:01pm-6pm respectively. Finally, if the the time was larger than all the times, it would assign it to the 6:01pm-12am interval. After the `time_interval` variable was created, I added another variable `arrival` (I originally called the variable `dep_delay_or_not`, however, I modified this when I reached question 8), using mutate and an `if_else()` statement. If `dep_delay` was greater than 0, then `arrival` =  "delayed". When `dep_delay` was less than or equal to 0, however, `arrival` = "ontime". I then saved these variable sections of the code to `flights` to make them accesssible in future chunks.***
 
-***In my last chunk, I created a frequency table using proportions. I first created a table (`delays_table`) to store the counts of whether the flight was delayed or not by time interval (`time_interval` for rows and `dep_delay_or_not` for columns). I then converted this table of counts into proportions where each row added up to 1 by using `prop.table(delays_table, 1)`.***
+***In my last chunk, I created a frequency table using proportions. I first created a table (`delays_table`) to store the counts of whether the flight was delayed or not by time interval (`time_interval` for rows and `arrival` for columns). I then converted this table of counts into proportions where each row added up to 1 by using `prop.table(delays_table, 1)`.***
 
     b\.
     Comment on how the likelihood of being delayed change throughout the day?
@@ -294,6 +295,13 @@ flights <-
   #select(date, origin, dest, name.y, tailnum, seats)    #reduces columns to easily check that the dataset correctly attached
 ```
 
+``` {r removing_columns_flights}
+
+flights <- flights %>%
+  select(year.x : temp, time_interval : lon, tzone, seats) #restricts the amounts of columns to year.x through temp, time_interval through lon, tzone, and seats as the RAM requirements for the dataset were getting too big
+
+```
+
 ``` {r flight_longest_airtime}
 
 flights %>%
@@ -305,7 +313,9 @@ flights %>%
 
 ***In my first chunk I attached both of the necessary datasets, `airports` and `planes`, to the the main dataset, `flights`. I used a `left_join` for each to make sure to only keep `airport` and `plane` data for rows that we had flight data on. However, for both datasets I had to manually set the join key using `join_by()`. For `airports` I specified that `dest == faa`. This matched `faa` (the airport code) to the destination airport code in `flights`. For planes, I set the key to `tailnum` since it was automatically using `year` which means 2 different things in the datasets. In `flights` it is the year of the flight, but in `planes` it is the year the plane was made. `Tailnum`, however, is in both datasets and references the same thing.***
 
-***In my next chunk, I determined the flight with the longest airtime, found the destination, and determined the number of seats on the flight. I first selected only `date`, `air_time`, `dest`, `name.y` (name of the airport), and `seats` from `flights` to keep my output clean. I then arranged the data from greatest to least by air_time to determine the flight with the longest air_time. The flight to Honolulu on 2013-03-17 had the longest airtime of 695 min (or 11 hr 35 min). Finally, I limited my table output to only show this flight by filtering for data with an `air_time` of 695.***
+***In my final chunk, I determined the flight with the longest airtime, found the destination, and determined the number of seats on the flight. I first selected only `date`, `air_time`, `dest`, `name.y` (name of the airport), and `seats` from `flights` to keep my output clean. I then arranged the data from greatest to least by air_time to determine the flight with the longest air_time. The flight to Honolulu on 2013-03-17 had the longest airtime of 695 min (or 11 hr 35 min). Finally, I limited my table output to only show this flight by filtering for data with an `air_time` of 695.***
+
+***After I reached question 8, I added another chunk in the middle to reduce the amount of variables in `flights` as the dataset was getting too large for my computer. I selected only the necessary columns (restricts the amounts of columns to (`year.x` through `temp`, `time_interval` through `lon`, `tzone`, and `seats`) from `flights`. I then saved over `flights` to reduce the variable count from 47 to 29.***
 
 7.  **Question 7 (15 pts)** - The `airports` data frame contains information on a large number of primarily American airports.
     These data include location information for these airports in the form of latitude and longitude coordinates.
@@ -347,6 +357,10 @@ Wikipedia contributors. (2025, February 22). List of extreme points of the Unite
     You will have to create `arrival` yourself, it is a categorical variable that is equal to `"ontime"` when `arr_delay <= 0` and `"delayed"` when `arr_delay > 0`.
 
 ![](img/plot-to-recreate.png)
+``` {r test}
+#flights %>%
+  #select(a)
+```
 
 **Extra Credit (5 pts)** - Create a visualization that effectively shows if there is a relationship between the average daily departure delay and the average daily temperature for all three New York city airports.
 Your answer must be given in a single pipe.

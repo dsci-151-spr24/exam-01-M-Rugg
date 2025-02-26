@@ -710,7 +710,7 @@ at each of these time intervals.</p></li>
            if_else(sched_dep_time &lt;= 600, &quot;12:01am-6am&quot;,
                    if_else(sched_dep_time &lt;= 1200, &quot;6:01am-12pm&quot;,
                            if_else(sched_dep_time &lt;= 1800, &quot;12:01pm-6pm&quot;, &quot;6:01pm-12am&quot;)))) %&gt;%
-  mutate(dep_delay_or_not = if_else(dep_delay &gt; 0, &quot;delayed&quot;, &quot;on time&quot;)) #%&gt;%    # creates a variable to store whether the flight has been delayed or not
+  mutate(arrival = if_else(dep_delay &gt; 0, &quot;delayed&quot;, &quot;ontime&quot;)) #%&gt;%    # creates a variable to store whether the flight has been delayed or not
   #filter(is.na(dep_delay_or_not))     #checks why there are N/A values in dep_delay_or_not</code></pre>
 <pre class="r"><code>#############################################
 # Title: R Tutorial: Counts vs. proportions
@@ -720,11 +720,11 @@ at each of these time intervals.</p></li>
 #############################################
 
 delays_table &lt;- 
-  table(flights$time_interval, flights$dep_delay_or_not)  #creates a table of counts to store the data
+  table(flights$time_interval, flights$arrival)  #creates a table of counts to store the data
 
 prop.table(delays_table, 1)           #creates a frequency table of delayed flights where the rows add up to 1</code></pre>
 <pre><code>##              
-##                 delayed   on time
+##                 delayed    ontime
 ##   12:01am-6am 0.2067985 0.7932015
 ##   12:01pm-6pm 0.4625371 0.5374629
 ##   6:01am-12pm 0.2603967 0.7396033
@@ -748,19 +748,20 @@ If the the time was less than or greater, however, it would assign
 6:01am-12pm, and 12:01pm-6pm respectively. Finally, if the the time was
 larger than all the times, it would assign it to the 6:01pm-12am
 interval. After the <code>time_interval</code> variable was created, I
-added another variable <code>dep_delay_or_not</code>, using mutate and
-an <code>if_else()</code> statement. If <code>dep_delay</code> was
-greater than 0, then <code>dep_delay_or_not</code> = “delayed”. When
-<code>dep_delay</code> was less than or equal to 0, however,
-<code>dep_delay_or_not</code> = “on time”. I then saved these variable
-sections of the code to <code>flights</code> to make them accesssible in
-future chunks.</em></strong></p>
+added another variable <code>arrival</code> (I originally called the
+variable <code>dep_delay_or_not</code>, however, I modified this when I
+reached question 8), using mutate and an <code>if_else()</code>
+statement. If <code>dep_delay</code> was greater than 0, then
+<code>arrival</code> = “delayed”. When <code>dep_delay</code> was less
+than or equal to 0, however, <code>arrival</code> = “ontime”. I then
+saved these variable sections of the code to <code>flights</code> to
+make them accesssible in future chunks.</em></strong></p>
 <p><strong><em>In my last chunk, I created a frequency table using
 proportions. I first created a table (<code>delays_table</code>) to
 store the counts of whether the flight was delayed or not by time
-interval (<code>time_interval</code> for rows and
-<code>dep_delay_or_not</code> for columns). I then converted this table
-of counts into proportions where each row added up to 1 by using
+interval (<code>time_interval</code> for rows and <code>arrival</code>
+for columns). I then converted this table of counts into proportions
+where each row added up to 1 by using
 <code>prop.table(delays_table, 1)</code>.</em></strong></p>
 <pre><code>b\.
 Comment on how the likelihood of being delayed change throughout the day?</code></pre>
@@ -798,6 +799,8 @@ flights &lt;-
   left_join(airports, join_by(dest == faa)) %&gt;% #attaches airports to flights, destination (in flights) is matched to the faa code
   left_join(planes, join_by(tailnum)) #%&gt;%                  #attaches planes to flights where only planes with flight data in flights is kept
   #select(date, origin, dest, name.y, tailnum, seats)    #reduces columns to easily check that the dataset correctly attached</code></pre>
+<pre class="r"><code>flights &lt;- flights %&gt;%
+  select(year.x : temp, time_interval : lon, tzone, seats) #resticts the amounts of columns to year.x through temp, time_interval through lon, tzone, and seats as the RAM requirements for the dataset were getting too big</code></pre>
 <pre class="r"><code>flights %&gt;%
   select(date, air_time, dest, name.y, seats) %&gt;% #only shows relevant variables
   arrange(desc(air_time)) %&gt;%     #orders output from greatest to least air time
