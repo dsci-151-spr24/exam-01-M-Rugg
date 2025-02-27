@@ -233,7 +233,7 @@ flights <-
            if_else(sched_dep_time <= 600, "12:01am-6am",
                    if_else(sched_dep_time <= 1200, "6:01am-12pm",
                            if_else(sched_dep_time <= 1800, "12:01pm-6pm", "6:01pm-12am")))) %>%
-  mutate(arrival = if_else(dep_delay > 0, "delayed", "ontime")) #%>%    # creates a variable to store whether the flight has been delayed or not
+  mutate(departure = if_else(dep_delay > 0, "delayed", "ontime")) #%>%    # creates a variable to store whether the flight has been delayed or not at departure
   #filter(is.na(dep_delay_or_not))     #checks why there are N/A values in dep_delay_or_not
 ```
 ``` {r time_interval_frequency}
@@ -245,7 +245,7 @@ flights <-
 #############################################
 
 delays_table <- 
-  table(flights$time_interval, flights$arrival)  #creates a table of counts to store the data
+  table(flights$time_interval, flights$departure)  #creates a table of counts to store the data
 
 prop.table(delays_table, 1)           #creates a frequency table of delayed flights where the rows add up to 1
 
@@ -254,9 +254,9 @@ prop.table(delays_table, 1)           #creates a frequency table of delayed flig
   #group_by(time_interval) %>%
   #count(dep_delay_or_not)
 ```
-***In my first chunk, I set up the time intervals (12:01am-6am, 6:01am-12pm, 12:01pm-6pm, 6:01pm-12am) as a variable, `time interval`. I first checked that `flights` had a scheduled departure time for each row by filtering all `N/A` values for `sched_dep_time`. There were no rows missing data for this variable. In a new section of code, I created a new variable `time_interval` using mutate and a series of nestled if-then statements (`if_else()`) where if `sched_dep_time` was greater than the specified time (600, 1200 and 1800 respectively) it would proceed on to the next statement. If the the time was less than or greater, however, it would assign `time_interval` to the appropriate bracket: 12:01am-6am, 6:01am-12pm, and  12:01pm-6pm respectively. Finally, if the the time was larger than all the times, it would assign it to the 6:01pm-12am interval. After the `time_interval` variable was created, I added another variable `arrival` (I originally called the variable `dep_delay_or_not`, however, I modified this when I reached question 8), using mutate and an `if_else()` statement. If `dep_delay` was greater than 0, then `arrival` =  "delayed". When `dep_delay` was less than or equal to 0, however, `arrival` = "ontime". I then saved these variable sections of the code to `flights` to make them accesssible in future chunks.***
+***In my first chunk, I set up the time intervals (12:01am-6am, 6:01am-12pm, 12:01pm-6pm, 6:01pm-12am) as a variable, `time interval`. I first checked that `flights` had a scheduled departure time for each row by filtering all `N/A` values for `sched_dep_time`. There were no rows missing data for this variable. In a new section of code, I created a new variable `time_interval` using mutate and a series of nestled if-then statements (`if_else()`) where if `sched_dep_time` was greater than the specified time (600, 1200 and 1800 respectively) it would proceed on to the next statement. If the the time was less than or greater, however, it would assign `time_interval` to the appropriate bracket: 12:01am-6am, 6:01am-12pm, and  12:01pm-6pm respectively. Finally, if the the time was larger than all the times, it would assign it to the 6:01pm-12am interval. After the `time_interval` variable was created, I added another variable `departure`, using mutate and an `if_else()` statement. If `dep_delay` was greater than 0, then `arrival` =  "delayed". When `dep_delay` was less than or equal to 0, however, `departure` = "ontime". I then saved these variable sections of the code to `flights` to make them accesssible in future chunks.***
 
-***In my last chunk, I created a frequency table using proportions. I first created a table (`delays_table`) to store the counts of whether the flight was delayed or not by time interval (`time_interval` for rows and `arrival` for columns). I then converted this table of counts into proportions where each row added up to 1 by using `prop.table(delays_table, 1)`.***
+***In my last chunk, I created a frequency table using proportions. I first created a table (`delays_table`) to store the counts of whether the flight was delayed or not by time interval (`time_interval` for rows and `departure` for columns). I then converted this table of counts into proportions where each row added up to 1 by using `prop.table(delays_table, 1)`.***
 
     b\.
     Comment on how the likelihood of being delayed change throughout the day?
@@ -357,10 +357,45 @@ Wikipedia contributors. (2025, February 22). List of extreme points of the Unite
     You will have to create `arrival` yourself, it is a categorical variable that is equal to `"ontime"` when `arr_delay <= 0` and `"delayed"` when `arr_delay > 0`.
 
 ![](img/plot-to-recreate.png)
-``` {r test}
-#flights %>%
-  #select(a)
+
+``` {r flights_arrival_delays}
+
+flights <- flights %>%
+  mutate(arrival = if_else(arr_delay > 0, "delayed", "ontime")) #%>%    # creates a variable to store whether the flight has been delayed or not)
 ```
+
+``` {r flights_visualization_reasoning, eval = FALSE}
+
+#flights %>%
+  #filter(date >= ymd (20131201)) %>%
+  #filter(dest == "BWI")                  #checks that other significant airports within the lat and lon had flights in december
+
+#airports %>%
+ # filter(lat < 39.87194, lat > 35.87764, 
+          #lon < -75.24114, lon > -78.78747)
+         
+
+#airports %>%
+  #filter(faa == "PHL" | faa == "RDU")
+```
+
+```{r flights_performance_visualization}
+
+flights %>%          
+  filter(dest == "PHL" | dest == "RDU",   #only includes destinations of PHL and RDU
+         date >= ymd (20131201),          #only includes December
+         !is.na(arrival)) %>%             #removes na arrivals
+  ggplot(mapping = aes(x = arrival, y = dep_delay, color = dest)) +  
+  geom_boxplot() +
+  labs(title = "On time performance of NYC flights", subtitle = "December 2013", color = "Destination", y = "Departure delay", x = "Arrival") +
+  facet_grid(dest ~ origin)
+
+```
+***In my first chunk I added the variable `arrival` to the `flights` dataset using `mutate` and a nested `if_else` statement. If `arr_delay` (arrival delay) was greater than 0, `arrival` = "delayed". Else, (`arr_delay` <= 0) `arrival` = "ontime".***
+
+***In my last chunk, I created the visualization. I first filtered the data to remove N/A arrivals with (`!na.rm(arrival)`), only included "PHL" or "RDU" as destinations (`dest == "PHL" | dest == "RDU"`), and only include December by only including dates on or after December 1st (`date >= ymd (20131201)`). I then used `ggplot()` to map the aesthetics of `arrival` on the x-axis, `dep_delay` (departure delays) on the y, and the color to `dest` (destination). I then made the plot a box and whisker plot by adding `geom_box()`, and added labels by adding labs. I set the title to equal "On time performance of NYC flights", the subtitle to equal "December 2013", the color to be "Destination", the y-axis label to be "Departure delay", and the x-axis label to equal "Arrival". Finally, I added `facet_grid(dest ~ origin)` to facet the box and whisker plot into a grid where origin was on the x-axis and destination was on the y-axis.***
+
+***The purpose of this graph likely has to do with comparing the frequency and length of delays from the NYC airports (EWR, JFK, LGA) to (PHL and RDU) through the month of December 2013. December is one of the most frequent airtravel months due to Christmas, but also has a lot of inclement weather and therefore delays. It might be helpful in choosing which departing airport one would want to use during this month to best avoid delays as you can compare the distributions of ontime and delayed arrivals. It also could help give an estimation of the length of departure delays (and therefore the amount of time you'll likely be waiting) for each of the airports to the destination.*** 
 
 **Extra Credit (5 pts)** - Create a visualization that effectively shows if there is a relationship between the average daily departure delay and the average daily temperature for all three New York city airports.
 Your answer must be given in a single pipe.
