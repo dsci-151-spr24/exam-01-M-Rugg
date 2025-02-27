@@ -400,3 +400,22 @@ flights %>%
 **Extra Credit (5 pts)** - Create a visualization that effectively shows if there is a relationship between the average daily departure delay and the average daily temperature for all three New York city airports.
 Your answer must be given in a single pipe.
 (You should only spend time on this question once you have finished answering the others)
+
+``` {r extra_credit_visualiztion}
+
+flights %>%
+  filter(!is.na(temp), !is.na(dep_delay)) %>% #removes N/A temps and departure delays
+  group_by(origin, date) %>%         #groups by origin airport and then date
+  summarise(mean_daily_temp = mean(temp), mean_dep_delay = mean(dep_delay)) %>%
+  ggplot(mapping = aes(x = mean_daily_temp, y = mean_dep_delay, color = origin)) +
+  #geom_point(alpha = 0.20) +
+  geom_smooth(alpha = 0.25) +
+  labs(title = "Temperature and Departure Delays of NYC airports", x = "Mean daily temp (F)", y = "Mean departure delay (min)", color = "Origin Airport") +
+  theme_minimal()
+
+```
+
+
+***I first filtered the data to remove N/A values in `temp` and `dep_delay`. I then grouped the data first by origin and then by date before calculating the average daily temp and average daily departure delay. These were calculated by using the `summarise()` and `mean()` functions on `temp` and `dep_delay` (`summarise(mean(temp), mean(dep_delay)`)). These averages were asigned to the variables `mean_daily_temp` and `mean_dep_delay` respectively. I then used ggplot() to map the aesthetics of `mean_daily_temp` on the x-axis, `mean_dep_delay` on the y-axis, and `origin` as the color. Next, I created a smoothed line graph to show the average for each temperature and delay using `geom_smooth()`, and set the alpha level to 0.20. I originally had overlayed the lines on top of a scatterplot, however, due to the large amounts of point, it was quickly overcrowded and hard to read. Therefore, I removed the scatterplot, and left just the mean lines. Finally, I added labels using labs. I set the title to equal "Temperature and Departure Delays of NYC airports", the color to be "Origin Airport", the y-axis label to be "Mean departure delay (min)", and the x-axis label to equal "Mean daily temp (F)".***
+
+***From the visualization we can see that, for each airport, the daily average departure delay does correlate to the average daily temperature. When temps are lower (less than 50 F), the average departure delay for the airport, tends to be higher. When temps are high (greater than 60 F), however, daily departure delays also increase (especially for JFK). Between 50 and 60 F, daily departure delays are roughly level or slowly increasing.***
