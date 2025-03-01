@@ -1,7 +1,7 @@
 ---
 title: "Take Home Exam #1"
 author: "Moriah Ruggerio"
-date: "February 24, 2025"
+date: "March 1, 2025"
 output: html_document
 ---
 
@@ -45,7 +45,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Academic Integrity Statement
 
-*I, \_\_\_\_\_\_\_\_\_\_\_\_, hereby state that I have not communicated with or gained information in any way from my classmates or anyone other than the Professor or TA during this exam, and that all work is my own.*
+*I, Moriah Ruggerio, hereby state that I have not communicated with or gained information in any way from my classmates or anyone other than the Professor or TA during this exam, and that all work is my own.*
 
 **A note on sharing / reusing code:** I am well aware that a huge volume of code is available on the web to solve any number of problems.
 For this exam you are allowed to make use of any online resources (e.g. StackOverflow) but you must explicitly cite where you obtained any code you directly use (or use as inspiration).
@@ -113,7 +113,7 @@ flights %>%
   filter(n > 9700)                #shows only the top 10 least
 ```
 
-***I created a frequency table of the destinations of NYC flights in 2013 by using the `count()` function on the variable `dest` (destination). I then arranged the display from greatest to least using `arrange(desc(n))` where `n` is equal to the number of flights to a destination and filtered the data to only include values over `9700` (just under the 10th most frequent destination). (Since only the year 2013 is included in the dataset, year did not need to be separately filtered.)***
+***I created a frequency table of the destinations of NYC flights in 2013 by using the `count()` function on the variable `dest` (destination) from the dataset `flights`. I then arranged the display from greatest to least using `arrange(desc(n))` where `n` is equal to the number of flights to a destination and filtered the data to only include values over `9700` (just under the 10th most frequent destination). (Since only the year 2013 is included in the dataset, year did not need to be separately filtered.)***
 
 ***The 10 most frequent destinations for NYC flights in 2013 in descending order are as follows: ORD (17283), ATL	(17215), LAX	(16174), BOS (15508), MCO	(14082), CLT (14064), SFO	(13331), FLL (12055), MIA (11728), and DCA (9705).***
 
@@ -147,7 +147,7 @@ flights %>%
 
 ```
 
-***I first added the airline names to the `flights` dataset. To do this I used a `left.join()` to take the `name` column from `airlines` and add it to `flights`. This matched the `carrier` in `flights` to it in `airlines`. I then saved these changes to `flights` to make it accessible for later. In a separate chunk, I created a frequency table using the `count()` function. I then arranged it from greatest to least with `arrange(desc(n))`.***
+***I first added the airline names to the `flights` dataset. To do this I used a `left.join()` to take the `name` column from `airlines` and added it to `flights`. This matched the `carrier` in `flights` to it in `airlines`. I then saved these changes to `flights` to make it accessible for later. In a separate chunk, I created a frequency table using the `count()` function. I then arranged it from greatest to least with `arrange(desc(n))`.***
 
 ***The airlines with the most flights out of NYC in 2013 are United Airlines Inc. (58,665), Jet Blue Airways (54,635), and ExpressJet Airlines Inc. (54,173).***
 
@@ -216,7 +216,7 @@ flights %>%
 
 ***In the next chunk I found the origin and date of the flight with the longest departure time. To do this, I first limited my output to `origin`, `dep_delay`, and `date`. Next, I organized `flights` from longest to shortest departure delay by using `arrange(desc(dep_delay))` and recorded the largest `dep_delay` value (1301). Finally, to clean up the output I filtered the data to only include the longest departure delay by using `filter(dep_delay == 1301)`. On 2013-01-09, JFK had the longest departure delay of 1301 min.***
 
-***In my last chunk I found the average temp for the airport with the longest departure delay on that day. To do this, I grouped `flights` by `origin` and then `date` to divide the data by days and departing airport. I then calculated the mean of `temp` using the `summarise(mean())` functions. Finally, I cleaned up the table output to only show the row with the highest departure delay by filtering for `origin == "JFK"` and `date == 2013-01-09`. On 2013-01-09, JFK had the longest departure delay of 1301 min and an average temperature of 44.56 F.***
+***In my last chunk I found the average temp for the airport with the longest departure delay on that day. To do this, I grouped `flights` by `origin` and then `date` to divide the data by days and departing airport. I then calculated the mean of `temp` using the `summarise(mean())` functions. Finally, I cleaned up the table output to only show the row with the highest departure delay by filtering for `origin == "JFK"` and `date == 2013-01-09`. On 2013-01-09, JFK had the longest departure delay of 1301 min and an average temperature of 44.6 F.***
 
 5.  **Question 5 (15 points)** - Consider breaking the day into four time intervals: 12:01am-6am, 6:01am-12pm, 12:01pm-6pm, 6:01pm-12am.
 
@@ -347,7 +347,7 @@ airports %>%
 **Longitude and Latitude coordinates for the Contiguous US:**
 Wikipedia contributors. (2025, February 22). List of extreme points of the United States. *Wikipedia, The Free Encyclopedia.* Retrieved February 25, 2025, from https://en.wikipedia.org/w/index.php?title=List_of_extreme_points_of_the_United_States&oldid=1277027586*
 
-***To start, I found the latitude and longitude coordinates of the of the most extreme points in the contiguous United States. Latitude was used for the southern and northernmost points. Longitude was used for the eastern and westernmost points.  Northwest Angle Inlet, MN was the northernmost point with a latitude of 49.2304, and Ballast Key, FL was the southernmost with a latitude of 24.3119 (Wikipedia contributers, 2025). Sail Rock, Lubec, ME was the easternmost point with a longitude of 66.56493, and the Bodelteh Islands, Cape Alava, WA were the westernmost point with a longitude of -124.46181 (Wikipedia contributers, 2025). After finding the points, I filtered the data to only include rows with latitudes that were less than the northernmost point but greater than the southernmost and that had longitudes less than the easternmost point but greater than the westernmost. This created essentially a rectangle of longitude and latitude bounds around the US. Since this rectangle could technically include parts of Canada or Mexico, I checked that all the timezones were US based by creating a frequency table using `count(tzone)`. The timezones were Chicago, Denver, New York, and Phoenix (all of which are part of the contiguous US). I commented the `count()` code out after a sucessfull check to create the visualization.****
+***To start, I found the latitude and longitude coordinates of the of the most extreme points in the contiguous United States. Latitude was used for the southern and northernmost points. Longitude was used for the eastern and westernmost points.  Northwest Angle Inlet, MN was the northernmost point with a latitude of 49.2304, and Ballast Key, FL was the southernmost with a latitude of 24.3119 (Wikipedia contributers, 2025). Sail Rock, Lubec, ME was the easternmost point with a longitude of 66.56493, and the Bodelteh Islands, Cape Alava, WA were the westernmost point with a longitude of -124.46181 (Wikipedia contributers, 2025). After finding the points, I filtered the data to only include rows with latitudes that were less than the northernmost point but greater than the southernmost and that had longitudes less than the easternmost point but greater than the westernmost. This created essentially a rectangle of longitude and latitude bounds around the US. Since this rectangle could technically include parts of Canada or Mexico, I checked that all the timezones were US based by creating a frequency table using `count(tzone)`. The timezones were Chicago, Denver, New York, and Phoenix (all of which are part of the contiguous US). I commented the `count()` code out after a sucessfull check to create the visualization.***
 
 ***For the visualization, I created a scatterplot of the filtered data. I used `ggplot()` where the asthetics of x and y were mapped to `lon` (longitude) and `lat` (latitude) respectively. I then added `geom_point()` (plots as a scatterplot) and fixed the alpha level to equal 0.20 to allow for overlapping points to be seen. Finally, I added labels (title = "Airport Locations in the Contiguous United States", y = "latitude", x = "longitude") using `labs()` and made the theme minimal (`theme_minimal`).***
 
@@ -391,6 +391,7 @@ flights %>%
   facet_grid(dest ~ origin)
 
 ```
+
 ***In my first chunk I added the variable `arrival` to the `flights` dataset using `mutate` and a nested `if_else` statement. If `arr_delay` (arrival delay) was greater than 0, `arrival` = "delayed". Else, (`arr_delay` <= 0) `arrival` = "ontime".***
 
 ***In my last chunk, I created the visualization. I first filtered the data to remove N/A arrivals with (`!na.rm(arrival)`), only included "PHL" or "RDU" as destinations (`dest == "PHL" | dest == "RDU"`), and only include December by only including dates on or after December 1st (`date >= ymd (20131201)`). I then used `ggplot()` to map the aesthetics of `arrival` on the x-axis, `dep_delay` (departure delays) on the y, and the color to `dest` (destination). I then made the plot a box and whisker plot by adding `geom_box()`, and added labels by adding labs. I set the title to equal "On time performance of NYC flights", the subtitle to equal "December 2013", the color to be "Destination", the y-axis label to be "Departure delay", and the x-axis label to equal "Arrival". Finally, I added `facet_grid(dest ~ origin)` to facet the box and whisker plot into a grid where origin was on the x-axis and destination was on the y-axis.***
@@ -416,6 +417,6 @@ flights %>%
 ```
 
 
-***I first filtered the data to remove N/A values in `temp` and `dep_delay`. I then grouped the data first by origin and then by date before calculating the average daily temp and average daily departure delay. These were calculated by using the `summarise()` and `mean()` functions on `temp` and `dep_delay` (`summarise(mean(temp), mean(dep_delay)`)). These averages were asigned to the variables `mean_daily_temp` and `mean_dep_delay` respectively. I then used ggplot() to map the aesthetics of `mean_daily_temp` on the x-axis, `mean_dep_delay` on the y-axis, and `origin` as the color. Next, I created a smoothed line graph to show the average for each temperature and delay using `geom_smooth()`, and set the alpha level to 0.20. I originally had overlayed the lines on top of a scatterplot, however, due to the large amounts of point, it was quickly overcrowded and hard to read. Therefore, I removed the scatterplot, and left just the mean lines. Finally, I added labels using labs. I set the title to equal "Temperature and Departure Delays of NYC airports", the color to be "Origin Airport", the y-axis label to be "Mean departure delay (min)", and the x-axis label to equal "Mean daily temp (F)".***
+***I first filtered the data to remove N/A values in `temp` and `dep_delay`. I then grouped the data first by origin and then by date before calculating the average daily temp and average daily departure delay. These were calculated by using the `summarise()` and `mean()` functions on `temp` and `dep_delay` (`summarise(mean(temp), mean(dep_delay)`)). These averages were asigned to the variables `mean_daily_temp` and `mean_dep_delay` respectively. I then used ggplot() to map the aesthetics of `mean_daily_temp` on the x-axis, `mean_dep_delay` on the y-axis, and `origin` as the color. Next, I created a smoothed line graph to show the average for each temperature and delay using `geom_smooth()`, and set the alpha level to 0.20. I originally had overlayed the lines on top of a scatterplot, however, due to the large number of points, it was quickly overcrowded and hard to read. Therefore, I removed the scatterplot, and left just the mean lines. Finally, I added labels using labs. I set the title to equal "Temperature and Departure Delays of NYC airports", the color to be "Origin Airport", the y-axis label to be "Mean departure delay (min)", and the x-axis label to equal "Mean daily temp (F)".***
 
 ***From the visualization we can see that, for each airport, the daily average departure delay does correlate to the average daily temperature. When temps are lower (less than 50 F), the average departure delay for the airport, tends to be higher. When temps are high (greater than 60 F), however, daily departure delays also increase (especially for JFK). Between 50 and 60 F, daily departure delays are roughly level or slowly increasing.***
